@@ -33,8 +33,8 @@ const quiz = [
 
 // index is which question you're on
 let index = 0;
-let secondsLeft;
-let timerLength = 35;
+let timerLength = 4;
+let secondsLeft = timerLength;
 
 const startQuizButton = document.getElementById("start");
 const highScoresButton = document.getElementById("view-highscores");
@@ -68,27 +68,36 @@ function resetTimer() {
 
 function setTime() {
   // Sets interval in variable
-  var timerInterval = setInterval(function() {
+  let timerInterval = setInterval(function() {
     secondsLeft--;
     timeLeft.textContent = secondsLeft;
 
-    if(secondsLeft === 0) {
+    if(secondsLeft <= 0) {
       // Stops execution of action at set interval
       clearInterval(timerInterval);
-      // Calls function to create and append image
-      // sendMessage();
+      endQuiz();
     }
-
   }, 1000);
 }
 
 function startQuiz() {
+  timeLeft.textContent = secondsLeft;
   result.textContent=""; /* result is where it displays correct or incorrect */
   display(1); /* Display the question card. */
 
   console.log("start quiz");
+
+  resetTimer();
+  setTime();
+
+
   setQuestion();
   setAnswerListeners();
+}
+
+function endQuiz() {
+  display(2); /* display the end quiz section and set the rest to display: none */
+
 }
 
 function viewHighScores() {
@@ -102,14 +111,21 @@ function setAnswerListeners() {
   for (i=0;i<3;i++) {
     answerButtons[i].addEventListener("click", function() {
       if (isCorrect(this.children[1].textContent)) {
-        gotCorrect();
-        
+          // Display correct
+          result.textContent = "✔️ Correct!"
       } else {
-        gotIncorrect();
-        
+        // Display incorrect
+        result.textContent = "❌ Incorrect!"
+        // Decrement timer
+        secondsLeft -= 5;
       }
       index++
-      setQuestion()
+      if (index < quiz.length) {
+        setQuestion()
+      } else {
+        index = 0;
+        endQuiz();
+      }
     })
   }
 }
