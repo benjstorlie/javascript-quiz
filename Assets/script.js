@@ -35,6 +35,8 @@ const quiz = [
 let index = 0;
 let timerLength = 4;
 let secondsLeft = timerLength;
+let currentScore;
+let yourName;
 
 const startQuizButton = document.getElementById("start");
 const highScoresButton = document.getElementById("view-highscores");
@@ -51,7 +53,10 @@ const answerButtons = document.getElementById("answer-box").children;
 // Sections
 const sections = document.querySelectorAll("main > section");
 const result = document.getElementById("result");
-
+const nameForm = document.getElementById("name-form");
+const yourScore = document.getElementById("your-score");
+const yourNameEl = document.getElementById("your-name");
+const submit = document.getElementById("submit");
 
 init();
 
@@ -82,6 +87,7 @@ function setTime() {
 
 function startQuiz() {
   timeLeft.textContent = secondsLeft;
+  currentScore = 0;
   result.textContent=""; /* result is where it displays correct or incorrect */
   display(1); /* Display the question card. */
 
@@ -97,27 +103,39 @@ function startQuiz() {
 
 function endQuiz() {
   display(2); /* display the end quiz section and set the rest to display: none */
+  yourScore.textContent = "Your score: "+currentScore;
+  yourNameEl.autofocus;
+  nameForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    setScore();
+  })
+}
 
+function setScore() {
+  yourName = yourNameEl.value;
+  let scores = JSON.parse(localStorage.getItem("scores"));
+  if (scores !== null ) {
+    scores.push({name: yourName, score: currentScore});
+  } else {
+    scores = [{name: yourName, score: currentScore}];
+  }
+  localStorage.setItem("scores",JSON.stringify(scores));
+  console.log(yourName + ', ' + currentScore);
+
+  viewHighScores();
 }
 
 function viewHighScores() {
-  welcome.style.display = "none";
-  questionCard.style.display = "none";
-  endQuiz.style.display = "none";
-  highscoresCard.style.display = "block";
+  display(3); /* show the high scores card and set the other sections to display: none */
 }
 
 function setAnswerListeners() {
   for (i=0;i<3;i++) {
     answerButtons[i].addEventListener("click", function() {
       if (isCorrect(this.children[1].textContent)) {
-          // Display correct
-          result.textContent = "✔️ Correct!"
+        gotCorrect();
       } else {
-        // Display incorrect
-        result.textContent = "❌ Incorrect!"
-        // Decrement timer
-        secondsLeft -= 5;
+        gotIncorrect();
       }
       index++
       if (index < quiz.length) {
@@ -146,6 +164,8 @@ function setQuestion() {
 function gotCorrect() {
   // Display correct
   result.textContent = "✔️ Correct!"
+  // Increment score
+  currentScore ++
 }
 
 function gotIncorrect() {
