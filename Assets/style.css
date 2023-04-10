@@ -9,6 +9,10 @@ main {
   text-align: center;
 }
 
+button {
+  cursor: pointer;
+}
+
 h1 {
   font-size: 36px;
   font-weight: bold;
@@ -17,18 +21,51 @@ h1 {
 #answer-box {
   display: grid;
   grid-template-columns: auto;
-  width:300px;
+  width: 300px;
+  margin: auto;
 }
 
-#answer-box button {
+.ans {
+  width: fit-content;
   border-width: 0px;
+  text-align: left;
   background-color:midnightblue;
   color:white;
   padding: 5px;
   margin: 5px;
-  display: block;
+  display: grid;
+  grid-template-columns: 20px auto;
+  cursor: pointer;
 }
 
-#answer-box button:hover {
-  background-color: rgb(35, 35, 109);
+.ans:hover {
+  /* midnightblue is rgb(25,25,112). Reference https://www.colorhexa.com/191970 for color ideas. */
+  background-color: rgb(62,62,212); 
+}
+
+/* This is the 1. 2. 3. before the listed options. */
+.ans:first-child {
+
+  align-content: right;
+
+}
+
+/* This is the actual text of the answers */
+.ans:last-child {
+
+  align-content: left;
+  max-width: 250px ;
+}
+
+#question-card hr {
+  border-top: 2px solid #bbb;
+  border-radius: 1px;  
+}
+
+#end-quiz {
+  display: none;
+}
+
+#highscores-card {
+  display: none;
 }
