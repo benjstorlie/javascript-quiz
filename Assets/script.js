@@ -40,6 +40,7 @@ let yourName;
 
 const startQuizButton = document.getElementById("start");
 const highScoresButton = document.getElementById("view-highscores");
+const clearHighscoresButton = document.getElementById("clear-highscores");
 const timer = document.getElementById("timer");
 const timeLeft = document.getElementById("time-left");
 
@@ -57,14 +58,18 @@ const nameForm = document.getElementById("name-form");
 const yourScore = document.getElementById("your-score");
 const yourNameEl = document.getElementById("your-name");
 const submit = document.getElementById("submit");
+const highscoresEL = document.getElementById("highscores");
+const highscoresHeadings = document.querySelectorAll(".grid-heading");
 
 init();
 
 function init() {
   display(0); /* Display the welcome section */
 
+  // Add events for all the buttons
   startQuizButton.addEventListener("click",startQuiz);
   highScoresButton.addEventListener("click",viewHighScores);
+  clearHighscoresButton.addEventListener("click",clearHighscores());
 }
 
 function resetTimer() {
@@ -119,6 +124,10 @@ function setScore() {
   } else {
     scores = [{name: yourName, score: currentScore}];
   }
+
+  // Sort the high scores array based on the score
+  scores.sort((x,y) => x.score - y.score);
+
   localStorage.setItem("scores",JSON.stringify(scores));
   console.log(yourName + ', ' + currentScore);
 
@@ -127,6 +136,7 @@ function setScore() {
 
 function viewHighScores() {
   display(3); /* show the high scores card and set the other sections to display: none */
+  fillHighscores();
 }
 
 function setAnswerListeners() {
@@ -174,6 +184,43 @@ function gotIncorrect() {
   // Show correct answer, or guess again?
   // Decrement timer
   secondsLeft -= 5;
+}
+
+function fillHighscores() {
+  // Create div elements to fill out the high scores page
+
+  // Erase whatever was displayed previously.
+  eraseHighscores();
+
+  // get the scores from local storage, which is an array of objects
+  let scores = JSON.parse(localStorage.getItem("scores"));
+
+  // Sort the high scores array based on the score
+  // They should be sorted already, so this is a reduncancy
+  //scores.sort((x,y) => x.score - y.score);
+  if (scores != null) {
+    for (i=0;i<scores.length;i++) {
+      let highscoresName = document.createElement("div");
+      let highscoresScore = document.createElement("div");
+      highscoresName.textContent = scores[i].name;
+      highscoresScore.textContent = scores[i].score;
+      highscoresEL.appendChild(highscoresName);
+      highscoresEL.appendChild(highscoresScore);
+    }
+  }
+}
+
+function clearHighscores() {
+  localStorage.setItem("scores",null);
+  console.log(localStorage.getItem("scores"));
+  fillHighscores();
+}
+
+function eraseHighscores() {
+  // This only erases the display of the high scores, and does not clear them from local storage
+
+  highscoresEL.replaceChildren(highscoresHeadings[0], highscoresHeadings[1]);
+
 }
 
 function display(n) {
