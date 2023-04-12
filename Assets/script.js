@@ -1,33 +1,40 @@
+// list of all questions, choices, and answers
 const quiz = [
   {
-    question: "Question?",
-    answers: ["A","Bsuperreall y long answer here lal ala lorem ipsuom solor dolsmas dlgnd","C"],
-    correct: "A",
-    shuffle: function () {this.answers = shuffle3(this.answers)}
+    title: 'Commonly used data types DO NOT include:',
+    choices: ['booleans', 'alerts', 'numbers'],
+    answer: 'alerts',
+    shuffle: function () {this.choices = shuffle3(this.choices)}
   },
   {
-    question: "I'm a question?",
-    answers: ["E","F","G"],
-    correct: "E",
-    shuffle: function () {this.answers = shuffle3(this.answers)}
+    title: 'The condition in an if / else statement is enclosed within ____.',
+    choices: ['curly brackets', 'parentheses', 'square brackets'],
+    answer: 'parentheses',
+    shuffle: function () {this.choices = shuffle3(this.choices)}
   },
   {
-    question: "Lorem ipsum?",
-    answers: ["I","J","K"],
-    correct: "K",
-    shuffle: function () {this.answers = shuffle3(this.answers)}
+    title: 'Arrays in JavaScript can be used to store ____.',
+    choices: [
+      'numbers and strings',
+      'other arrays',
+      'numbers, strings, other arrays, and more',
+    ],
+    answer: 'numbers, strings, other arrays, and more',
+    shuffle: function () {this.choices = shuffle3(this.choices)}
   },
   {
-    question: "Toby?",
-    answers: ["M","N","O"],
-    correct: "N",
-    shuffle: function () {this.answers = shuffle3(this.answers)}
+    title:
+      'String values must be enclosed within ____ when being assigned to variables.',
+    choices: ['curly brackets', 'quotes', 'parentheses'],
+    answer: 'quotes',
+    shuffle: function () {this.choices = shuffle3(this.choices)}
   },
   {
-    question: "You're taking a quiz?",
-    answers: ["P","Q","R"],
-    correct: "Q",
-    shuffle: function () {this.answers = shuffle3(this.answers)}
+    title:
+      'A very useful tool used during development and debugging for printing content to the debugger is:',
+    choices: ['terminal / bash', 'for loops', 'console.log'],
+    answer: 'console.log',
+    shuffle: function () {this.choices = shuffle3(this.choices)}
   },
 ];
 
@@ -41,6 +48,7 @@ let yourName;
 const startQuizButton = document.getElementById("start");
 const highScoresButton = document.getElementById("view-highscores");
 const clearHighscoresButton = document.getElementById("clear-highscores");
+const backButton = document.getElementById("back");
 const timer = document.getElementById("timer");
 const timeLeft = document.getElementById("time-left");
 
@@ -61,6 +69,7 @@ const submit = document.getElementById("submit");
 const highscoresEL = document.getElementById("highscores");
 const highscoresHeadings = document.querySelectorAll(".grid-heading");
 
+
 init();
 
 function init() {
@@ -69,7 +78,11 @@ function init() {
   // Add events for all the buttons
   startQuizButton.addEventListener("click",startQuiz);
   highScoresButton.addEventListener("click",viewHighScores);
-  clearHighscoresButton.addEventListener("click",clearHighscores());
+  clearHighscoresButton.addEventListener("click",function () {
+    console.log("Clear high scores button calls clearHighscores()");
+    clearHighscores();
+  });
+  backButton.addEventListener("click",function() {display(0)});
 }
 
 function resetTimer() {
@@ -111,6 +124,7 @@ function endQuiz() {
   yourScore.textContent = "Your score: "+currentScore;
   yourNameEl.autofocus;
   nameForm.addEventListener("submit", function(event) {
+    console.log("submit button calls setScore()");
     event.preventDefault();
     setScore();
   })
@@ -159,15 +173,15 @@ function setAnswerListeners() {
 }
 
 function isCorrect(str) {
-  return str === quiz[index].correct;
+  return str === quiz[index].answer;
 }
 
 function setQuestion() {
   
-  questionEl.textContent = quiz[index].question;
+  questionEl.textContent = quiz[index].title;
   quiz[index].shuffle();
   for (i=0;i<3;i++) {
-    answersEl[i].textContent =quiz[index].answers[i];
+    answersEl[i].textContent =quiz[index].choices[i];
   }
 }
 
