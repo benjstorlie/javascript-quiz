@@ -1,7 +1,26 @@
+* {
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 20px;
+}
+
+/*
+  The color theme is based on midnightblue rgb(25,25,112).
+  Reference https://www.colorhexa.com/191970 for color ideas.
+*/
+
+/* The header consists of just the "view high scores" button on the  */
 header {
   display: flex;
   justify-content: space-between;
   padding: 20px;
+}
+
+/* The timer is displayed in the top right corner
+ has extra padding to match the "view high scores" button in the top left*/
+#timer {
+  padding: 9px;
+  margin-top: 10px;
+  line-height: 1.1;
 }
 
 main {
@@ -9,29 +28,50 @@ main {
   text-align: center;
 }
 
+/* The buttons, quiz choices, and text input all have similar styles
+*/
+
 button {
   cursor: pointer;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 7px;
+  margin-top: 10px;
+  line-height: 1.1;
+  background-color:midnightblue;
+  color:white;
 }
 
-h1 {
-  font-size: 36px;
-  font-weight: bold;
+/* #your-name is the text input field for the initials of the player */
+
+#your-name {
+  border-width: 2px;
+  border-color: midnightblue;
+  border-radius: 7px;
+  padding: 10px;
+  margin-top: 10px;
 }
 
-#answer-box {
-  display: grid;
-  grid-template-columns: auto;
-  width: 300px;
-  margin: auto;
+#your-name::selection {
+  background-color: rgb(62,62,212);
+  color: white;
 }
+
+/* 
+  .ans is the class of all the quiz choices
+  They are each divided into a 2 column grid so that the 1. 2. and 3. all line up neatly before the text of the choice
+  This is why they are div elements instead of buttons, because the buttons only hold text or span elements, and these need to hold two div elements.
+*/
 
 .ans {
   width: fit-content;
   border-width: 0px;
+  border-radius: 7px;
   text-align: left;
+  line-height: 1.1;
   background-color:midnightblue;
   color:white;
-  padding: 5px;
+  padding: 10px;
   margin: 5px;
   display: grid;
   grid-template-columns: 20px auto;
@@ -39,9 +79,28 @@ h1 {
 }
 
 .ans:hover {
-  /* midnightblue is rgb(25,25,112). Reference https://www.colorhexa.com/191970 for color ideas. */
   background-color: rgb(62,62,212); 
 }
+
+/*
+  h1 is for the headings and also for the text of each question, since that seems like the main heading on the page
+  Further down on this stylesheet, I have h1 change font size as the screen size changes
+*/
+
+h1 {
+  font-size: 150%;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+/* #answer-box holds the three choices.   */
+
+#answer-box {
+  width: 300px;
+  margin: auto;
+}
+
+
 
 /* This is the 1. 2. 3. before the listed options. */
 .ans:first-child {
@@ -66,13 +125,37 @@ h1 {
   display: none;
 }
 
+#your-score {
+  font-weight: bold;
+}
+
 #highscores-card {
   display: none;
 }
 
 #highscores {
   display: grid;
-  grid-template-columns: 50px 50px;
+  grid-template-columns: 90px 90px;
   row-gap:10px;
+  justify-content: center;
 }
 
+.highscores-name, .highscores-score {
+  background-color: rgb(191,191,241);
+  padding: 5px;
+}
+
+
+/* Large smartphones*/
+@media screen and (max-width: 768px) {
+  h1 {
+    font-size: 125%;
+  }
+}
+
+/* Small smartphones */
+@media screen and (max-width: 576px) {
+  h1 {
+    font-size: 100%;
+  }
+}

@@ -41,6 +41,7 @@ const quiz = [
 // index is which question you're on
 let index = 0;
 const timerLength = 10;
+const decrement = 5;
 let secondsLeft = timerLength;
 let currentScore;
 let yourName;
@@ -74,15 +75,21 @@ const endQuizHeading = document.getElementById("end-quiz-heading");
 init();
 
 function init() {
-  display(0); /* Display the welcome section */
+  display(0); // Display the welcome section
+
+  // The page will display the length of the timer, so the user knows that information before the quiz starts.
+  // When the quiz starts, it will display how many seconds are left.
+  timeLeft.textContent = timerLength;
+
+  // Fill in the description of the quiz rules with the variables of the timer length and number of questions.
+  document.getElementById("rules-timer-length").textContent=timerLength;
+  document.getElementById("rules-quiz-length").textContent=quiz.length;
+  document.getElementById("rules-decrement").textContent=decrement;
 
   // Add events for all the buttons
   startQuizButton.addEventListener("click",startQuiz);
   highScoresButton.addEventListener("click",viewHighScores);
-  clearHighscoresButton.addEventListener("click",function () {
-    console.log("Clear high scores button calls clearHighscores()");
-    clearHighscores();
-  });
+  clearHighscoresButton.addEventListener("click", clearHighscores);
   backButton.addEventListener("click",function() {display(0)});
   nameForm.addEventListener("submit", function(event) {
     console.log("submit button calls setScore()");
@@ -92,19 +99,15 @@ function init() {
   setAnswerListeners();
 }
 
-function resetTimer() {
-  secondsLeft = timerLength;
-  timeLeft.textContent = secondsLeft;
-  console.log("Reset Timer: "+secondsLeft);
-}
-
 function setTime() {
-  console.log("setTime function");
+  
+  
+  timeLeft.textContent = secondsLeft;
   // Sets interval in variable
   let timerInterval = setInterval(function() {
     secondsLeft--;
     timeLeft.textContent = secondsLeft;
-    console.log("Time left: "+secondsLeft);
+    
 
     if(secondsLeft <= 0) {
       // Stops execution of action at set interval
@@ -118,16 +121,14 @@ function setTime() {
 }
 
 function startQuiz() {
-  resetTimer();
-  timeLeft.textContent = secondsLeft;
+  secondsLeft = timerLength;
   currentScore = 0;
   index = 0;
   result.textContent=""; /* result is where it displays correct or incorrect */
   display(1); /* Display the question card. */
 
-  console.log("start quiz");
-
-  resetTimer();
+  // The "view high scores" button is disabled during the quiz because, so the user needs to complete the quiz first. This makes things simpler.
+  highScoresButton.disabled = true;
   
   setTime();
 
@@ -143,9 +144,12 @@ function endQuiz(win) {
     endQuizHeading.textContent = "Time's Up!"
   }
   display(2); /* display the end quiz section and set the rest to display: none */
-  resetTimer();
-  yourScore.textContent = "Your score: "+currentScore;
-  yourNameEl.autofocus;
+
+  highScoresButton.disabled = false;
+
+  timeLeft.textContent = timerLength;
+  yourScore.textContent = currentScore;
+  yourNameEl.select();
 }
 
 function setScore() {
@@ -215,7 +219,8 @@ function gotIncorrect() {
   result.textContent = "❌ Incorrect!"
   // Show correct answer, or guess again?
   // Decrement timer
-  secondsLeft -= 5;
+  secondsLeft = secondsLeft - decrement;
+  
 }
 
 function fillHighscores() {
@@ -234,6 +239,8 @@ function fillHighscores() {
     for (i=0;i<scores.length;i++) {
       let highscoresName = document.createElement("div");
       let highscoresScore = document.createElement("div");
+      highscoresName.classList.add("highscores-name");
+      highscoresScore.classList.add("highscores-score");
       highscoresName.textContent = scores[i].name;
       highscoresScore.textContent = scores[i].score;
       highscoresEL.appendChild(highscoresName);
@@ -244,7 +251,7 @@ function fillHighscores() {
 
 function clearHighscores() {
   localStorage.setItem("scores",null);
-  console.log(localStorage.getItem("scores"));
+  
   fillHighscores();
 }
 

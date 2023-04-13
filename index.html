@@ -14,9 +14,14 @@
     <div id="timer">Time: <span id="time-left"></span></div>
   </header>
   <main>
+    <!-- All the <sections> are the parts of the application that display at different times: the Welcome Page, the High Scores List, the End Quiz display, and the quiz itself. -->
     <section id="welcome">
       <h1>This is a quiz</h1>
-      <p>These are the quiz rules</p>
+      <p>
+        These are the quiz rules. There are <span id="rules-quiz-length"></span> questions.
+        You have <span id="rules-timer-length"></span> seconds.
+        You will lose <span id="rules-decrement"></span> seconds every time you get a question incorrect.
+      </p>
       <button id="start">Start Quiz!</button>
     </section>
     <section id="question-card">
@@ -31,17 +36,17 @@
     </section>
     <section id="end-quiz">
       <h1 id="end-quiz-heading"></h1>
-      <div id="your-score"></div>
+      <div>Your score: <span id="your-score"></span></div>
       <label for="your-name">Enter your initials here:</label>
       <form id="name-form">
-        <input type="text" id="your-name" name="your-name" maxlength="4" placeholder="AA" value="AA">
-        <input type="submit" id="submit">
+        <input type="text" id="your-name" name="your-name" maxlength="4" size="4" value="AA">
+        <button id="submit">Submit</button>
       </form>
     </section>
     <section id="highscores-card">
       <div id="highscores">
         <div class="grid-heading">Initials</div>
-        <div class="grid-heading">score</div>
+        <div class="grid-heading">Score</div>
       </div>
       <button id="clear-highscores">Clear All</button>
       <button id="back">Back</button>
