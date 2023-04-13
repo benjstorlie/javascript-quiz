@@ -111,6 +111,9 @@ function setTime() {
       clearInterval(timerInterval);
       endQuiz(false);
     }
+    if (index == quiz.length) {
+      clearInterval(timerInterval);
+    }
   }, 1000);
 }
 
@@ -180,7 +183,7 @@ function setAnswerListeners() {
       if (index < quiz.length) {
         setQuestion()
       } else {
-        index = 0;
+        
         endQuiz(true);
       }
     })
