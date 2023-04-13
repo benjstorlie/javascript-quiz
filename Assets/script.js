@@ -40,7 +40,7 @@ const quiz = [
 
 // index is which question you're on
 let index = 0;
-let timerLength = 4;
+const timerLength = 10;
 let secondsLeft = timerLength;
 let currentScore;
 let yourName;
@@ -68,6 +68,7 @@ const yourNameEl = document.getElementById("your-name");
 const submit = document.getElementById("submit");
 const highscoresEL = document.getElementById("highscores");
 const highscoresHeadings = document.querySelectorAll(".grid-heading");
+const endQuizHeading = document.getElementById("end-quiz-heading");
 
 
 init();
@@ -83,51 +84,65 @@ function init() {
     clearHighscores();
   });
   backButton.addEventListener("click",function() {display(0)});
+  nameForm.addEventListener("submit", function(event) {
+    console.log("submit button calls setScore()");
+    event.preventDefault();
+    setScore();
+  });
+  setAnswerListeners();
 }
 
 function resetTimer() {
   secondsLeft = timerLength;
+  timeLeft.textContent = secondsLeft;
+  console.log("Reset Timer: "+secondsLeft);
 }
 
 function setTime() {
+  console.log("setTime function");
   // Sets interval in variable
   let timerInterval = setInterval(function() {
     secondsLeft--;
     timeLeft.textContent = secondsLeft;
+    console.log("Time left: "+secondsLeft);
 
     if(secondsLeft <= 0) {
       // Stops execution of action at set interval
       clearInterval(timerInterval);
-      endQuiz();
+      endQuiz(false);
     }
   }, 1000);
 }
 
 function startQuiz() {
+  resetTimer();
   timeLeft.textContent = secondsLeft;
   currentScore = 0;
+  index = 0;
   result.textContent=""; /* result is where it displays correct or incorrect */
   display(1); /* Display the question card. */
 
   console.log("start quiz");
 
   resetTimer();
+  
   setTime();
 
 
   setQuestion();
-  setAnswerListeners();
+  
 }
 
-function endQuiz() {
+function endQuiz(win) {
+  if (win) {
+    endQuizHeading.textContent = "All Done!"
+  } else {
+    endQuizHeading.textContent = "Time's Up!"
+  }
   display(2); /* display the end quiz section and set the rest to display: none */
+  resetTimer();
   yourScore.textContent = "Your score: "+currentScore;
   yourNameEl.autofocus;
-  nameForm.addEventListener("submit", function(event) {
-    console.log("submit button calls setScore()");
-    event.preventDefault();
-    setScore();
-  })
 }
 
 function setScore() {
@@ -166,7 +181,7 @@ function setAnswerListeners() {
         setQuestion()
       } else {
         index = 0;
-        endQuiz();
+        endQuiz(true);
       }
     })
   }
@@ -177,7 +192,7 @@ function isCorrect(str) {
 }
 
 function setQuestion() {
-  
+  // Displays the question associated with the current index value
   questionEl.textContent = quiz[index].title;
   quiz[index].shuffle();
   for (i=0;i<3;i++) {
