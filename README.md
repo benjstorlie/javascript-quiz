@@ -2,7 +2,7 @@
 A timed, multiple-choice quiz to test your JavaScript knowledge
 
 # Installation
-The quiz can be accessed at benjstorlie.github.io/javascript-quiz
+The quiz can be accessed at [benjstorlie.github.io/javascript-quiz](benjstorlie.github.io/javascript-quiz).
 
 ## User Story
 
