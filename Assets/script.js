@@ -137,16 +137,17 @@ function setTime() {
     if (index == quiz.length) {
       clearInterval(timerInterval);
       // endQuiz does not need to be called here, because it is already called when the last question was answered.
-    }
+    
     // If the timer reaches 0, or the timer went below 0 due to incorrect answers, then end the quiz.
-    if (secondsLeft <= 0) {
+    } else if (secondsLeft <= 0) {
       clearInterval(timerInterval);
       endQuiz(false);
-    }
-    // If the quiz is not over, then update the display.
+    } else {
+      // If the quiz is not over, then update the display.
 
-    secondsLeft--; // Decrement seconds
-    timeLeft.textContent = secondsLeft; // Update the display
+      secondsLeft--; // Decrement seconds
+      timeLeft.textContent = secondsLeft; // Update the display
+    }
   }, 1000);
 }
 
