@@ -153,8 +153,8 @@ function startQuiz() {
   result.textContent = ""; /* result is where it displays correct or incorrect */
   display(1); /* Display the question card. */
 
-  // The "view high scores" button is disabled during the quiz because, so the user needs to complete the quiz first. This makes things simpler.
-  highScoresButton.disabled = true;
+  // The "view high scores" button is hidden during the quiz because, so the user needs to complete the quiz first. This makes things simpler.
+  highScoresButton.style.visibility = hidden;
 
   setQuestion(); // Display the question and choices
   setTime(); // Start the timer
@@ -171,7 +171,7 @@ function endQuiz(win) {
   }
   display(2); /* display the end quiz section and set the rest to display: none */
 
-  highScoresButton.disabled = false;
+  highScoresButton.style.visibility = visible; 
 
   timeLeft.textContent = timerLength;
   yourScore.textContent = currentScore;
