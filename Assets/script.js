@@ -188,7 +188,7 @@ function setScore() {
   }
 
   // Sort the high scores array based on the score
-  scores.sort((x, y) => x.score - y.score);
+  scores.sort((x, y) => y.score-x.score);
 
   localStorage.setItem("scores", JSON.stringify(scores));
   viewHighScores();
