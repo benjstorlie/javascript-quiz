@@ -1,8 +1,19 @@
 # A JavaScript Quiz
 A timed, multiple-choice quiz to test your JavaScript knowledge
 
-# Installation
+## Installation
 The quiz can be accessed at [benjstorlie.github.io/javascript-quiz](benjstorlie.github.io/javascript-quiz).
+
+## Screenshots
+
+![A user clicks through an interactive coding quiz.](./Assets/images/ScreenshotQuestionCard.png)  
+*A user clicks through an interactive coding quiz.*
+
+![A user enters initials to save the high score.](./Assets/images/ScreenshotEndQuiz.png)  
+*A user enters initials to save the high score.*
+
+![View high scores in descending order.](./Assets/images/ScreenshotHighScores.png)  
+*View high scores in descending order.*
 
 ## User Story
 
@@ -30,8 +41,9 @@ THEN I can save my initials and my score
 
 ## Comments
 
-1. I know that most multiple-choice quizzes show 4-5 choices per item. In my teacher education program, I  learned that research showed that having 3 choices was sufficient to assess a student's knowledge.  Unfortunately, I do not, off-hand, have a source for this. However, the only part where it is relevant in the actual code is the shuffling function in the JavaScript file.  I had it only accept an array with 3 elements, to avoid more complication than necessary.
+1. I added an "End Quiz" button to make testing easier.  It simulates the timer reaching zero.
 
+1. I know that most multiple-choice quizzes show 4-5 choices per item. In my teacher education program, I  learned that research showed that having 3 choices was sufficient to assess a student's knowledge.  Unfortunately, I do not, off-hand, have a source for this. However, the only part where it is relevant in the actual code is the shuffling function in the JavaScript file.  I had it only accept an array with 3 elements, to avoid more complication than necessary.
 
 2. I really wanted the quiz items to be classes, because I wanted `shuffle` to be a method on the quiz item objects, and I did not want to copy and paste it into each one.
 
