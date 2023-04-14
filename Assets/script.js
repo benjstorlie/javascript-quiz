@@ -132,17 +132,21 @@ function setTime() {
   timeLeft.textContent = secondsLeft;
   // Sets interval in variable
   let timerInterval = setInterval(function () {
-    secondsLeft--; // Decrement seconds
-    timeLeft.textContent = secondsLeft; // Update the display
 
+    // If all the questions were answered, the index will equal the quiz length, and then the timer can stop.
+    if (index == quiz.length) {
+      clearInterval(timerInterval);
+      // endQuiz does not need to be called here, because it is already called when the last question was answered.
+    }
+    // If the timer reaches 0, or the timer went below 0 due to incorrect answers, then end the quiz.
     if (secondsLeft <= 0) {
-      // Stops execution of action at set interval
       clearInterval(timerInterval);
       endQuiz(false);
     }
-    if (index == quiz.length) {
-      clearInterval(timerInterval);
-    }
+    // If the quiz is not over, then update the display.
+
+    secondsLeft--; // Decrement seconds
+    timeLeft.textContent = secondsLeft; // Update the display
   }, 1000);
 }
 
