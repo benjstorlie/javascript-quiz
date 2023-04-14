@@ -1,75 +1,103 @@
-// list of all questions, choices, and answers
-const quiz = [
-  {
-    title: 'Commonly used data types DO NOT include:',
-    choices: ['booleans', 'alerts', 'numbers'],
-    answer: 'alerts',
-    shuffle: function () {this.choices = shuffle3(this.choices)}
-  },
-  {
-    title: 'The condition in an if / else statement is enclosed within ____.',
-    choices: ['curly brackets', 'parentheses', 'square brackets'],
-    answer: 'parentheses',
-    shuffle: function () {this.choices = shuffle3(this.choices)}
-  },
-  {
-    title: 'Arrays in JavaScript can be used to store ____.',
-    choices: [
-      'numbers and strings',
-      'other arrays',
-      'numbers, strings, other arrays, and more',
-    ],
-    answer: 'numbers, strings, other arrays, and more',
-    shuffle: function () {this.choices = shuffle3(this.choices)}
-  },
-  {
-    title:
-      'String values must be enclosed within ____ when being assigned to variables.',
-    choices: ['curly brackets', 'quotes', 'parentheses'],
-    answer: 'quotes',
-    shuffle: function () {this.choices = shuffle3(this.choices)}
-  },
-  {
-    title:
-      'A very useful tool used during development and debugging for printing content to the debugger is:',
-    choices: ['terminal / bash', 'for loops', 'console.log'],
-    answer: 'console.log',
-    shuffle: function () {this.choices = shuffle3(this.choices)}
-  },
+class QuizItem {
+  // This class defines the quiz item.  Its arguments are the question title, the answer, followed by two distractors.
+  // The choices are shuffled in the constructor, so you wouldn't be able to tell the answer from the order of this.choices
+
+  //I think I used static correctly. permutations is just the 6 permutations of [0,1,2]. I could define it as a global variable, but it's only being used in the quizItem method shuffle. And it doesn't make sense to define it every time the method is called.
+  static permutations = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
+
+  constructor(title,answer,choice1,choice2) {
+    this.title = title;
+    this.choices = [answer,choice1,choice2];
+    this.answer=answer;
+    this.shuffle()
+  }
+  shuffle() {
+    // This function returns a shuffled array of exactly 3 elements.
+    // It's easier to just list the 6 permutations and pick from those.
+    // I was getting some errors when trying to be clever about it.
+
+    let newIndeces = QuizItem.permutations[Math.floor(6 * Math.random())];
+
+    let newChoices = Array(3);
+    for (let i = 0; i < 3; i++) {
+      newChoices[i] = this.choices[newIndeces[i]];
+    }
+    this.choices = newChoices;
+  }
+}
+
+// quiz is the variable containing all of the multiple choice items.
+quiz = [
+  new QuizItem(
+    'Commonly used data types DO NOT include:',
+    'alerts', //answer
+    'booleans',
+    'numbers'
+  ),
+  new QuizItem(
+    'The condition in an if / else statement is enclosed within ____.',
+    'parentheses', //answer
+    'curly brackets',
+    'square brackets'
+  ),
+  new QuizItem(
+    'Arrays in JavaScript can be used to store ____.',
+    'numbers, strings, other arrays, and more', //answer
+    'numbers and strings',
+    'other arrays'
+  ),
+  new QuizItem(
+    'String values must be enclosed within ____ when being assigned to variables.',
+    'quotes', //answer
+    'curly brackets',
+    'parentheses'
+  ),
+  new QuizItem(
+    'A very useful tool used during development and debugging for printing content to the debugger is:',
+    'console.log', //answer
+    'terminal / bash',
+    'for loops'
+  ),
 ];
 
-// index is which question you're on
-let index = 0;
+// index is which question the player is on. It's defined as 0 in the function startQuiz
+let index;
 const timerLength = 10;
+// decrement is how much time the player loses when answering incorrectly
 const decrement = 5;
 let secondsLeft = timerLength;
+// currentScore is how many questions are answered correctly. It's defined as 0 in the function startQuiz
 let currentScore;
+// yourName will be the initials the player enters at the end of the quiz
 let yourName;
 
+// Define all the html elements as variables
+
+// Define all the button elements
 const startQuizButton = document.getElementById("start");
 const highScoresButton = document.getElementById("view-highscores");
 const clearHighscoresButton = document.getElementById("clear-highscores");
 const backButton = document.getElementById("back");
-const timer = document.getElementById("timer");
-const timeLeft = document.getElementById("time-left");
-
-const questionEl = document.getElementById("question");
-const answersEl = Array(3);
-for (i=0;i<3;i++) {
-  answersEl[i]=document.getElementById("ans"+i);
-}
+// Define the 3 answer buttons (which are just <div>s not <buttons>)
 const answerButtons = document.getElementById("answer-box").children;
 
-// Sections
-const sections = document.querySelectorAll("main > section");
-const result = document.getElementById("result");
-const nameForm = document.getElementById("name-form");
-const yourScore = document.getElementById("your-score");
-const yourNameEl = document.getElementById("your-name");
-const submit = document.getElementById("submit");
-const highscoresEL = document.getElementById("highscores");
-const highscoresHeadings = document.querySelectorAll(".grid-heading");
+// answersEl is the elements holding the text of the 3 answers. This is different from answerButtons, which contain the 1., 2., 3. as well.
+const answersEl = Array(3);
+for (i = 0; i < 3; i++) {
+  answersEl[i] = document.getElementById("ans" + i);
+}
+
+const sections = document.querySelectorAll("main > section"); //the 4 sections which display 1 at a time: welcome, question-card, end-quiz, and highscores-card
+const timeLeft = document.getElementById("time-left"); //the span element displaying how much time is left
+const questionEl = document.getElementById("question"); //the heading with the text of the question
 const endQuizHeading = document.getElementById("end-quiz-heading");
+const result = document.getElementById("result"); //at the end of the quiz, the span showing how many questions were answered correctly
+const yourScore = document.getElementById("your-score");
+const nameForm = document.getElementById("name-form");
+const yourNameEl = document.getElementById("your-name");
+const highscoresEl = document.getElementById("highscores"); 
+
+
 
 
 init();
@@ -82,17 +110,16 @@ function init() {
   timeLeft.textContent = timerLength;
 
   // Fill in the description of the quiz rules with the variables of the timer length and number of questions.
-  document.getElementById("rules-timer-length").textContent=timerLength;
-  document.getElementById("rules-quiz-length").textContent=quiz.length;
-  document.getElementById("rules-decrement").textContent=decrement;
+  document.getElementById("rules-timer-length").textContent = timerLength;
+  document.getElementById("rules-quiz-length").textContent = quiz.length;
+  document.getElementById("rules-decrement").textContent = decrement;
 
   // Add events for all the buttons
-  startQuizButton.addEventListener("click",startQuiz);
-  highScoresButton.addEventListener("click",viewHighScores);
+  startQuizButton.addEventListener("click", startQuiz);
+  highScoresButton.addEventListener("click", viewHighScores);
   clearHighscoresButton.addEventListener("click", clearHighscores);
-  backButton.addEventListener("click",function() {display(0)});
-  nameForm.addEventListener("submit", function(event) {
-    console.log("submit button calls setScore()");
+  backButton.addEventListener("click", function () { display(0) });
+  nameForm.addEventListener("submit", function (event) {
     event.preventDefault();
     setScore();
   });
@@ -100,16 +127,14 @@ function init() {
 }
 
 function setTime() {
-  
-  
+  // This is the timer function.  setTime is called at the start of the quiz and starts counting down.
   timeLeft.textContent = secondsLeft;
   // Sets interval in variable
-  let timerInterval = setInterval(function() {
-    secondsLeft--;
-    timeLeft.textContent = secondsLeft;
-    
+  let timerInterval = setInterval(function () {
+    secondsLeft--; // Decrement seconds
+    timeLeft.textContent = secondsLeft; // Update the display
 
-    if(secondsLeft <= 0) {
+    if (secondsLeft <= 0) {
       // Stops execution of action at set interval
       clearInterval(timerInterval);
       endQuiz(false);
@@ -121,23 +146,24 @@ function setTime() {
 }
 
 function startQuiz() {
+  // This function is called when the "start quiz" button is clicked.
   secondsLeft = timerLength;
   currentScore = 0;
   index = 0;
-  result.textContent=""; /* result is where it displays correct or incorrect */
+  result.textContent = ""; /* result is where it displays correct or incorrect */
   display(1); /* Display the question card. */
 
   // The "view high scores" button is disabled during the quiz because, so the user needs to complete the quiz first. This makes things simpler.
   highScoresButton.disabled = true;
-  
-  setTime();
 
-
-  setQuestion();
-  
+  setQuestion(); // Display the question and choices
+  setTime(); // Start the timer
 }
 
 function endQuiz(win) {
+  // This function is called when the quiz comes to an end.
+  // The argument win is a Boolean. It is true if the player completed all the questions, and false if the timer ran out.
+  // The only difference is the display.
   if (win) {
     endQuizHeading.textContent = "All Done!"
   } else {
@@ -155,18 +181,16 @@ function endQuiz(win) {
 function setScore() {
   yourName = yourNameEl.value;
   let scores = JSON.parse(localStorage.getItem("scores"));
-  if (scores !== null ) {
-    scores.push({name: yourName, score: currentScore});
+  if (scores !== null) {
+    scores.push({ name: yourName, score: currentScore });
   } else {
-    scores = [{name: yourName, score: currentScore}];
+    scores = [{ name: yourName, score: currentScore }];
   }
 
   // Sort the high scores array based on the score
-  scores.sort((x,y) => x.score - y.score);
+  scores.sort((x, y) => x.score - y.score);
 
-  localStorage.setItem("scores",JSON.stringify(scores));
-  console.log(yourName + ', ' + currentScore);
-
+  localStorage.setItem("scores", JSON.stringify(scores));
   viewHighScores();
 }
 
@@ -176,8 +200,8 @@ function viewHighScores() {
 }
 
 function setAnswerListeners() {
-  for (i=0;i<3;i++) {
-    answerButtons[i].addEventListener("click", function() {
+  for (i = 0; i < 3; i++) {
+    answerButtons[i].addEventListener("click", function () {
       if (isCorrect(this.children[1].textContent)) {
         gotCorrect();
       } else {
@@ -187,7 +211,7 @@ function setAnswerListeners() {
       if (index < quiz.length) {
         setQuestion()
       } else {
-        
+
         endQuiz(true);
       }
     })
@@ -202,8 +226,8 @@ function setQuestion() {
   // Displays the question associated with the current index value
   questionEl.textContent = quiz[index].title;
   quiz[index].shuffle();
-  for (i=0;i<3;i++) {
-    answersEl[i].textContent =quiz[index].choices[i];
+  for (i = 0; i < 3; i++) {
+    answersEl[i].textContent = quiz[index].choices[i];
   }
 }
 
@@ -211,7 +235,7 @@ function gotCorrect() {
   // Display correct
   result.textContent = "✔️ Correct!"
   // Increment score
-  currentScore ++
+  currentScore++
 }
 
 function gotIncorrect() {
@@ -220,7 +244,7 @@ function gotIncorrect() {
   // Show correct answer, or guess again?
   // Decrement timer
   secondsLeft = secondsLeft - decrement;
-  
+
 }
 
 function fillHighscores() {
@@ -236,56 +260,39 @@ function fillHighscores() {
   // They should be sorted already, so this is a reduncancy
   //scores.sort((x,y) => x.score - y.score);
   if (scores != null) {
-    for (i=0;i<scores.length;i++) {
+    for (i = 0; i < scores.length; i++) {
       let highscoresName = document.createElement("div");
       let highscoresScore = document.createElement("div");
       highscoresName.classList.add("highscores-name");
       highscoresScore.classList.add("highscores-score");
       highscoresName.textContent = scores[i].name;
       highscoresScore.textContent = scores[i].score;
-      highscoresEL.appendChild(highscoresName);
-      highscoresEL.appendChild(highscoresScore);
+      highscoresEl.appendChild(highscoresName);
+      highscoresEl.appendChild(highscoresScore);
     }
   }
 }
 
 function clearHighscores() {
-  localStorage.setItem("scores",null);
-  
+  localStorage.setItem("scores", null);
+
   fillHighscores();
 }
 
 function eraseHighscores() {
   // This only erases the display of the high scores, and does not clear them from local storage
 
-  highscoresEL.replaceChildren(highscoresHeadings[0], highscoresHeadings[1]);
+  highscoresEl.replaceChildren(highscoresEl.children[0], highscoresEl.children[1]);
 
 }
 
 function display(n) {
   // Set the nth section under main to display: "block", and set the rest to display: "none"
-  for (i=0; i<sections.length; i++) {
-    if (i==n) {
+  for (i = 0; i < sections.length; i++) {
+    if (i == n) {
       sections[i].style.display = "block";
     } else {
       sections[i].style.display = "none";
     }
   }
-}
-
-const permutations = [[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
-
-function shuffle3(array) {
-  // This function returns a shuffled array of exactly 3 elements.
-  // It's easier to just list the 6 permutations and pick from those.
-  // I was getting some errors when trying to be clever about it.
-
-  let newIndeces = permutations[Math.floor(6*Math.random())];
-
-  newArray = [,,];
-  for (i=0;i<3;i++) {
-    newArray[i]=array[newIndeces[i]];
-  }
-
-  return newArray;
 }

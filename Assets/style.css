@@ -140,6 +140,10 @@ h1 {
   justify-content: center;
 }
 
+.grid-heading {
+  font-weight: bold;
+}
+
 .highscores-name, .highscores-score {
   background-color: rgb(191,191,241);
   padding: 5px;
