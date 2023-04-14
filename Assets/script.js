@@ -62,7 +62,7 @@ quiz = [
 
 // index is which question the player is on. It's defined as 0 in the function startQuiz
 let index;
-const timerLength = 10;
+const timerLength = 30;
 // decrement is how much time the player loses when answering incorrectly
 const decrement = 5;
 let secondsLeft = timerLength;
@@ -124,6 +124,7 @@ function init() {
     setScore();
   });
   setAnswerListeners();
+  document.getElementById("end-quiz-button").addEventListener("click", function() {secondsLeft = 0});
 }
 
 function setTime() {
@@ -154,7 +155,7 @@ function startQuiz() {
   display(1); /* Display the question card. */
 
   // The "view high scores" button is hidden during the quiz because, so the user needs to complete the quiz first. This makes things simpler.
-  highScoresButton.style.visibility = hidden;
+  highScoresButton.style.visibility = "hidden";
 
   setQuestion(); // Display the question and choices
   setTime(); // Start the timer
@@ -171,7 +172,7 @@ function endQuiz(win) {
   }
   display(2); /* display the end quiz section and set the rest to display: none */
 
-  highScoresButton.style.visibility = visible; 
+  highScoresButton.style.visibility = "visible"; 
 
   timeLeft.textContent = timerLength;
   yourScore.textContent = currentScore;

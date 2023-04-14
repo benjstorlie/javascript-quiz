@@ -28,6 +28,11 @@ main {
   text-align: center;
 }
 
+/* The .js controls the display of the different sections. Only one will display at a time. */
+main > section {
+  display: none;
+}
+
 /* The buttons, quiz choices, and text input all have similar styles
 */
 
@@ -36,6 +41,7 @@ button {
   width: fit-content;
   padding: 10px;
   border-radius: 7px;
+  border-color: rgb(46,46,91);
   margin-top: 10px;
   line-height: 1.1;
   background-color:midnightblue;
@@ -95,12 +101,26 @@ h1 {
 
 /* #answer-box holds the three choices.   */
 
-#answer-box {
+#answer-box, #result-box {
   width: 300px;
   margin: auto;
 }
 
+#result-box {
+  display: flex;
+  justify-content: space-between;
+}
 
+#end-quiz-button {
+  font-size: 70%;
+  border-radius: 10px;
+  border-color: rgb(91,46,46);
+  background-color: rgb(112,25,25);
+}
+
+#end-quiz-button:hover {
+  background-color: rgb(212,62,62); 
+}
 
 /* This is the 1. 2. 3. before the listed options. */
 .ans:first-child {
